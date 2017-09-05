@@ -20,10 +20,10 @@ import javax.swing.*;
  */
 public class Lab1 {
 	public static frame f;
-	public static String fileurl;
+	public static String fileUrl;
 	
 	public static void readInFile(){
-		File file = new File(fileurl);
+		File file = new File(fileUrl);
 
 		Scanner in;
 		try {
@@ -102,7 +102,7 @@ class panel extends JPanel {
 				fd.setVisible(true);
 				String filename = fd.getFile();
 				if (filename != null){
-					Lab1.fileurl = fd.getDirectory() + fd.getFile();
+					Lab1.fileUrl = fd.getDirectory() + fd.getFile();
 					Lab1.readInFile();
 				}
 			}
