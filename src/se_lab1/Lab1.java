@@ -13,14 +13,6 @@ import java.util.Scanner;
 
 import javax.swing.*;
 
-/**
- * @author dell-pc
- *
- */
-/**
- * @author dell-pc
- *
- */
 public class Lab1 extends JComponent {
 	private static final long serialVersionUID = -4654513992552014113L;
 	public static frame f;
@@ -111,6 +103,9 @@ class treeNode {
 		this.parentList.add(anotherParent);
 	}
 	
+	/** 对当前节点进行添加子节点操作，附带对子节点查重操作
+	 * @param anotherChild 添加的子节点
+	 */
 	public void addChild(treeNode anotherChild) {
 		treeNode checkNode = this.childList.nodeCheck(anotherChild.getWord());
 		int nodeIndex,childPathWeight;
@@ -164,13 +159,19 @@ class tree {
 }
 
 
+/** 继承原生ArrayList类添加自定义元素查找方法
+ * @author Yumi
+ * 
+ * @param <E> 内部添加的方法只对treeNode对象集有效 
+ */
 class NodeList<E> extends ArrayList<E> {
 
-	/**
-	 * 继承原生ArrayList类添加自定义元素查找方法
-	 */
 	private static final long serialVersionUID = 682330081079347841L;
 	
+	/** 检查节点是否已经存在
+	 * @param word 单词
+	 * @return 存在节点情况(是则返回节点，否则null)
+	 */
 	public treeNode nodeCheck(String word) {
 		treeNode existedNode = null,getNode;
 		for(int i = 0;i<this.size();i++) {
