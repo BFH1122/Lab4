@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.Scanner;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class Lab1 {
 				System.out.print(replaceStr(str));
 			}
 		} catch (FileNotFoundException e) {
-			// TODO ×Ô¶¯Éú³ÉµÄ catch ¿é
+			// TODO è‡ªåŠ¨ç”Ÿæˆçš„ catch å—
 			e.printStackTrace();
 		}
 	}
@@ -42,7 +43,6 @@ public class Lab1 {
 	}
 	public static void main(String[] args) {
 		f = new frame();
-		
 	}
 
 }
@@ -59,7 +59,7 @@ class frame extends JFrame{
 	
 	
 	public frame() {
-		setTitle("²âÊÔ");
+		setTitle("æµ‹è¯•");
 		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -78,15 +78,27 @@ class panel extends JPanel {
 	 */
 	private static final long serialVersionUID = -466385864846654643L;
 	
+	class fileFilter implements FilenameFilter {
+		private String type;
+		public fileFilter(String type) {
+			this.type = type;
+		}
+		
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.endsWith(type);
+		}
+		
+	}
 	public panel(){
-		JButton btnOpen = new JButton("´ò¿ª");
+		JButton btnOpen = new JButton("æ‰“å¼€");
 		btnOpen.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO ×Ô¶¯Éú³ÉµÄ·½·¨´æ¸ù
-				FileDialog fd = new FileDialog(Lab1.f, "Ñ¡ÔñÒª´ò¿ªµÄÎÄ¼ş", FileDialog.LOAD);
-				fd.setFile("*.txt");
+				// TODO è‡ªåŠ¨ç”Ÿæˆçš„æ–¹æ³•å­˜æ ¹
+				FileDialog fd = new FileDialog(Lab1.f, "é€‰æ‹©è¦æ‰“å¼€çš„æ–‡ä»¶", FileDialog.LOAD);
+				fd.setFilenameFilter(new fileFilter(".txt"));
 				fd.setVisible(true);
 				String filename = fd.getFile();
 				if (filename != null){
@@ -98,4 +110,6 @@ class panel extends JPanel {
 		});
 		add(btnOpen);
 	}
+	
+	
 }
