@@ -32,6 +32,7 @@ public class Lab1 extends JComponent {
 			}
 			words = wordSplit(wordsStr);
 			t = new tree(words);
+			t.calculateNodeLevel();
 			createFlowChartFrame();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -83,6 +84,7 @@ public class Lab1 extends JComponent {
 
 class treeNode {
 	String word;
+	int level;
 	NodeList<treeNode> parentList;
 	NodeList<treeNode> childList;
 	ArrayList<Integer> childPathWeightList;
@@ -90,7 +92,7 @@ class treeNode {
 	public treeNode(String word, treeNode parent) {
 		this.word = word;
 		this.parentList = new NodeList<treeNode>();
-		parentList.add(parent);
+		this.parentList.add(parent);
 		this.childList = new NodeList<treeNode>();
 		this.childPathWeightList = new ArrayList<Integer>();
 	}
@@ -122,12 +124,37 @@ class treeNode {
 			this.childPathWeightList.add(new Integer(1));
 		}
 	}
+	
+	/** 调用节点方法输入子节点进行查询邻接边权值
+	 * @param childNode 查询邻接子节点
+	 * @return 返回0则为不邻接，返回正整数权值则邻接
+	 */
+	public int getWeightOfNode(treeNode childNode) {
+		int weight,childIndex;
+		childIndex = this.childList.indexOf(childNode);
+		if(childIndex == -1) {
+			// 没有找到该节点,即未邻接当前node
+			weight = 0;
+		} else {
+			// 找到节点，返回weight值
+			weight = this.childPathWeightList.get(childIndex).intValue();
+		}
+		return weight;
+	}
+	
+	public void setNodeLevel(int level) {
+		this.level = level;
+	}
+	
+	public int getNodeLevel() {
+		return this.level;
+	}
 }
 
 class tree {
 	treeNode head;
 	NodeList<treeNode> treeNodes;
-	
+
 	public tree(String[] words) {
 		treeNode node_pr,node_after;
 		this.head = new treeNode(words[0],null);
@@ -156,6 +183,34 @@ class tree {
 			node_pr = node_after;
 		}
 	}
+	
+	/** 利用队列结构计算出treeNodes中各treeNode的level值
+	 *  
+	 *  @注  在treeNode中直接调用treeNode.getNodeLevel()即可获得level值
+	 */
+	public void calculateNodeLevel() {
+		NodeList<treeNode> Queue = new NodeList<treeNode>();
+		NodeList<treeNode> CopyList = new NodeList<treeNode>();
+		CopyList.addAll(treeNodes);
+		treeNode presentNode,childNode;
+		int presentLevel;
+		head.setNodeLevel(1);
+		Queue.push(this.head);
+ 		while(CopyList.size() != 0) {
+ 			presentNode = Queue.pop();
+ 			presentLevel = presentNode.getNodeLevel() + 1;
+ 			for(int i = 0;i<presentNode.childList.size();i++) {
+ 				childNode = presentNode.childList.get(i);
+ 				if(CopyList.indexOf(childNode) != -1) {
+ 					childNode.setNodeLevel(presentLevel);
+ 					if(Queue.indexOf(childNode) == -1) {
+ 						Queue.push(childNode);
+ 					}
+ 				}
+ 			}
+ 			CopyList.remove(presentNode);
+ 		}
+	}
 }
 
 
@@ -167,7 +222,7 @@ class tree {
 class NodeList<E> extends ArrayList<E> {
 
 	private static final long serialVersionUID = 682330081079347841L;
-	
+	int longestWordLength = 0;
 	/** 检查节点是否已经存在
 	 * @param word 单词
 	 * @return 存在节点情况(是则返回节点，否则null)
@@ -184,6 +239,50 @@ class NodeList<E> extends ArrayList<E> {
 		return existedNode;
 	}
 	
+	/* 重写添加节点方法，在添加节点时计算最长单词长度
+	 * @see java.util.ArrayList#add(java.lang.Object)
+	 */
+	@Override
+	public boolean add(E e) {
+		// TODO Auto-generated method stub
+		if(e != null) {
+			treeNode addNode = (treeNode) e;
+			String word = addNode.word;
+			this.longestWordLength = word.length() > this.longestWordLength ? word.length():this.longestWordLength;
+		}
+		return super.add(e);
+	}
+	
+	/** 返回当前List中最长词长
+	 * @return int 最长词长
+	 */
+	public int getLongestWordLength() {
+		return this.longestWordLength;
+	}
+	
+	/** 添加到AList的队列操作 PUSH
+	 * @param pushNode
+	 * @return 操作返回布尔值
+	 */
+	public boolean push(E pushNode) {
+		boolean flag;
+		flag = this.add(pushNode);
+		return flag;
+	}
+	
+	/** 添加到AList的队列操作 POP
+	 * @return 当前List的首元素出队
+	 */
+	public treeNode pop() {
+		treeNode popNode;
+		if(this.size() != 0) {
+			popNode = (treeNode) this.get(0);
+			this.remove(0);
+		} else {
+			popNode = null;
+		}
+		return popNode;
+	}
 }
 
 class frame extends JFrame{
