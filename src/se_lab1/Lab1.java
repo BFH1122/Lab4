@@ -6,6 +6,7 @@ package se_lab1;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -168,6 +169,7 @@ class ShowWaitingRunnable implements Runnable {
 		
 		// 用于测试的输出
 		System.out.println("Create Img Success!");
+		picDisplayPanel.setPic(Lab1.fileUrl.replace("txt", "png"));
 	}
 
 
@@ -384,32 +386,26 @@ class frame extends JFrame{
 	private static final long serialVersionUID = -6904245993409935448L;
 	private static final int WIDTH = 220;
 	private static final int HEIGHT = 250;
-	private static panel p;
-	
+	picDisplayPanel picPanel;
 	
 	public frame() {
-		setTitle("Test Frame");
+		setTitle("Flow chart");
 		setSize(WIDTH, HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLocationRelativeTo(null);
-		Container c = new Container();
-		c = getContentPane();
-		p = new panel();
-		c.add(p);
-		setVisible(true);
-	}
-}
-
-class panel extends JPanel {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -466385864846654643L;
-	
-	public panel(){
-		JButton btnOpen = new JButton("Open");
-		btnOpen.addActionListener(new ActionListener(){
+		Container c = getContentPane();
+		GridLayout twoSeprateLayout = new GridLayout(1,2);
+		c.setLayout(twoSeprateLayout);
+		
+		// 菜单栏 定义
+		JMenuBar mb = new JMenuBar();JMenu mFile = new JMenu("文件(F)");
+		// File菜单
+		mFile.setMnemonic('F');
+		JMenuItem miOpen = new JMenuItem("打开");
+		miOpen.setMnemonic('O');
+		mFile.add(miOpen);
+		miOpen.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text file", "txt");
@@ -417,10 +413,6 @@ class panel extends JPanel {
 				fc.setDialogTitle("Choose file");
 				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				fc.showOpenDialog(Lab1.f);
-				
-				// FileDialog fd = new FileDialog(Lab1.f, "Choose file", FileDialog.LOAD);
-				// fd.setFile("*.txt");
-				// fd.setVisible(true);
 				File filename = fc.getSelectedFile();
 				if (filename != null){
 					Lab1.fileUrl = fc.getSelectedFile().getAbsolutePath();
@@ -428,6 +420,54 @@ class panel extends JPanel {
 				}
 			}
 		});
-		add(btnOpen);
+		// 将主菜单添加到菜单栏
+		mb.add(mFile);
+		// 将菜单栏添加到主程序
+		setJMenuBar(mb);
+		
+		picDisplayPanel picPanel = new picDisplayPanel();
+		JScrollPane sp = new JScrollPane(picPanel);
+		sp.validate();
+		c.add(sp, twoSeprateLayout);
+		functionPanel funcPanel = new functionPanel();
+		c.add(funcPanel, twoSeprateLayout);
+		setVisible(true);
+	}
+}
+
+class functionPanel extends JPanel {
+	private static final long serialVersionUID = -1104559035947942491L;
+	private JTabbedPane tp = new JTabbedPane(JTabbedPane.BOTTOM);
+	private String[] tabNames = {"选项卡1", "选项卡2", "选项卡3", "选项卡4", "选项卡5"};
+	public functionPanel() {
+		JPanel tab1 = new JPanel();
+		tp.add(tabNames[0], tab1);
+		JPanel tab2 = new JPanel();
+		tp.add(tabNames[1], tab2);
+		add(tp);
+	}
+}
+
+class picDisplayPanel extends JPanel {
+	private static final long serialVersionUID = -466385864846654643L;
+	public static JLabel picLabel;
+	public static int WIDTH;
+	public static int HEIGHT;
+	public static ImageIcon pic;
+	public picDisplayPanel(){
+		picLabel = new JLabel();
+		add(picLabel);
+	}
+	
+	public static void setPic(String path) {
+		pic = new ImageIcon(path);
+		WIDTH = pic.getIconWidth();
+		HEIGHT = pic.getIconHeight();
+		picLabel.setIcon(pic);
+	}
+	
+	public static void changeSize(int percent) {
+		pic.setImage(pic.getImage().getScaledInstance(percent * WIDTH, percent * HEIGHT, Image.SCALE_DEFAULT));
+		picLabel.setIcon(pic);
 	}
 }
