@@ -2,7 +2,7 @@
 
 主要任务：获取文本文件里的字符串进行生成单词节点邻接关系有向图
  
-## 需求1：ReplaceStr
+## 需求1：ReplaceStr √
 
 > main(String[] args)
 
@@ -10,7 +10,7 @@
 
 *注：更改为GUI框架内处理*
 
-## 需求2：ShowGraph
+## 需求2：ShowGraph √
 
 > type createDirectedGraph(String filename);void showDirectedGraph(type G)
 
