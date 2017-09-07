@@ -23,7 +23,9 @@ public class Lab1 extends JComponent {
 	public static String fileUrl;
 	public static String[] words;
 	public static tree t;
-	
+	public static int imgState = 0;
+
+
 	public static void readInFile(){
 		File file = new File(fileUrl);
 		String wordsStr = "";
@@ -77,40 +79,25 @@ public class Lab1 extends JComponent {
 			e.printStackTrace();
 		}
 		
-		// 运行dot(已配置好环境变量的情况下)
-		Runtime run = Runtime.getRuntime();
-		try {
-			Process process = run.exec(String.format("dot -Tpng %s -o %s", fileUrl.replace(".txt", ".dot"), fileUrl.replace(".txt", ".png")));
-			process.waitFor();
-		} catch (IOException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
+		Runnable createGraphRunnable = new CreateGraphRunnable();
+		Runnable showWaitingRunnable = new ShowWaitingRunnable();
+
+		Thread createGraphThread = new Thread(createGraphRunnable);
+		Thread showWaitingThread = new Thread(showWaitingRunnable);
+
+		// 初始化图片生成状态
+		Lab1.imgState = 0;
+		
+		// 开始进程
+		createGraphThread.start();
+		showWaitingThread.start();
 		
 		return true;
 	}
 	
-//	protected void paintComponent(Graphics g) {
-//		Graphics2D g2d = (Graphics2D)g;
-//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-//		g2d.drawString(t.head.word, 10, 10);
-//	}
-	
 	public Lab1() {
 		setBackground(Color.WHITE);
 	}
-	
-//	public static void createFlowChartFrame() {
-//		final JFrame f = new JFrame("流程图");  
-//        // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
-//        f.setSize(800, 600);  
-//        f.add(new Lab1());  
-//        f.setVisible(true);  
-//        f.setLocationRelativeTo(f.getOwner());  
-//	}
 	
 	/** 切割字符串
 	 * @param str 读入的字符串
@@ -131,6 +118,59 @@ public class Lab1 extends JComponent {
 	public static void main(String[] args) {
 		f = new frame();
 	}
+}
+
+/** 调用Graphviz创建有向图图片的进程
+ * @author Yumi
+ *
+ */
+class CreateGraphRunnable implements Runnable {
+		
+	@Override
+	public void run() {
+		// 运行dot(已配置好环境变量的情况下)
+		Runtime run = Runtime.getRuntime();
+		try {
+			Process process = run.exec(String.format("dot -Tpng %s -o %s", Lab1.fileUrl.replace(".txt", ".dot"), Lab1.fileUrl.replace(".txt", ".png")));
+			process.waitFor();
+			// 生成完图片标记imgState通知Thread2结束
+			Lab1.imgState = 1;
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+	}
+}
+
+/** 等待Graphviz创建图片结束的进程
+ * @author Yumi
+ *	
+ */
+class ShowWaitingRunnable implements Runnable {
+		
+	@Override
+	public void run() {
+		// 预留出来的线程（做其他，比如显示等待图片或者进度条）
+		
+		// while等待图片加载
+		while(Lab1.imgState == 0) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		// 图片加载完毕后进行操作
+		
+		// 用于测试的输出
+		System.out.println("Create Img Success!");
+	}
+
+
 }
 
 class treeNode {
