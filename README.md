@@ -39,3 +39,7 @@
 > String randomWalk(type G)
 
 随机节点出发随机遍历（重复边或者无节点可寻则停止），用户可手动停止遍历，输出构造文本
+
+## 初步设计主界面原型
+
+![设计原型](https://raw.githubusercontent.com/zhouchang29/se_lab1/master/%E4%B8%BB%E7%95%8C%E9%9D%A2%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%9E%8B.png)
