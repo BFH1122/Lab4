@@ -43,3 +43,19 @@
 ## 初步设计主界面原型
 
 ![设计原型](https://raw.githubusercontent.com/zhouchang29/se_lab1/master/%E4%B8%BB%E7%95%8C%E9%9D%A2%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%9E%8B.png)
+
+## 项目进度记录 
+
+### 2017/09/07
+
+在master分支已经做好了后端数据架构的情况下，应对图形化界面的应用情况，分出了三个分支：
+
++ GraphvizVersion：Java外部调用命令行软件Graphviz进行图形化的生成
++ JGraphTVersion：拟采用JGraphT图形库生成可交互动态图形
++ Graphics2DVersion：当以上两个版本遇到不可抗力的因素而无法达到要求的最后选择，即用Java图形库建立自定义绘图库来生成图形
+
+同时完成了部分原型的设计部分
+
+如果没有遇到困难，GraphvizVersion分支预期在本周末完成项目需求90%
+
+Note Created by Yumi
