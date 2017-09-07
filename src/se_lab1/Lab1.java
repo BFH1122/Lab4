@@ -6,8 +6,11 @@ package se_lab1;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -28,38 +31,85 @@ public class Lab1 extends JComponent {
 			in = new Scanner(file);
 			while(in.hasNextLine()){
 				String str = in.nextLine();
-				wordsStr = wordsStr.concat(replaceStr(str));
+				wordsStr = wordsStr.concat(replaceStr(str)+" ");
 			}
 			words = wordSplit(wordsStr);
 			t = new tree(words);
 			t.calculateNodeLevel();
-			createFlowChartFrame();
+			generateDotFile("Verdana", 12);
+			// createFlowChartFrame(); 暂时使用Graphviz方案
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	protected void paintComponent(Graphics g) {
-		Graphics2D g2d = (Graphics2D)g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-		// GradientPaint grdp = new GradientPaint(150, 150, Color.decode("#81FBB8"), 300, 300, Color.decode("#28C76F"));
-		// g2d.setPaint(grdp);
-		// g2d.fillRoundRect(150, 150, 150, 150, 15, 15);
-		g2d.drawString(t.head.word, 10, 10);
+	public static boolean generateDotFile(String fontname, int fontsize) {
+		NodeList<treeNode> queue = new NodeList<treeNode>();
+		treeNode nowNode = t.head;
+		File dotFile = new File(fileUrl.replace("txt", "dot"));
+		try {
+			dotFile.createNewFile();
+			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(dotFile));
+			outBuffer.write(String.format("digraph %s {\n\tfontname = \"%s\";\n\tfontsize = %d;\n\n", "test", fontname, fontsize)); // 这里的名字可以替换的其实
+			outBuffer.write(String.format("\tnode [ fontname = \"%s\", fontsize = %d ]\n", fontname, fontsize));
+			outBuffer.write(String.format("\tedge [ fontname = \"%s\", fontsize = %d ]\n\n", fontname, fontsize));
+			for(int i = 0; i < words.length; i++) {
+				outBuffer.write(String.format("\t%s;\n", words[i]));
+			}
+			queue.push(nowNode);			
+			while(queue.isEmpty() != true) {
+				nowNode = queue.pop();
+				if (nowNode != null) {
+					for(int i = 0; i < nowNode.childList.size(); i++) {
+						treeNode nowChildNode = nowNode.childList.get(i);
+						outBuffer.write(String.format("\t%s -> %s [label=\"%d\"];\n", nowNode.word, nowChildNode.word, nowNode.getWeightOfNode(nowChildNode)));
+						if (nowNode.level < nowChildNode.level && queue.indexOf(nowChildNode) == -1) {
+							queue.push(nowChildNode);
+						}
+					}
+				}
+			}
+			outBuffer.write("}");
+			outBuffer.flush();
+			outBuffer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// 运行dot(已配置好环境变量的情况下)
+		Runtime run = Runtime.getRuntime();
+		try {
+			Process process = run.exec(String.format("dot -Tpng %s -o %s", fileUrl.replace(".txt", ".dot"), fileUrl.replace(".txt", ".png")));
+			process.waitFor();
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		
+		return true;
 	}
+	
+//	protected void paintComponent(Graphics g) {
+//		Graphics2D g2d = (Graphics2D)g;
+//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+//		g2d.drawString(t.head.word, 10, 10);
+//	}
 	
 	public Lab1() {
 		setBackground(Color.WHITE);
 	}
 	
-	public static void createFlowChartFrame() {
-		final JFrame f = new JFrame("流程图");  
-        // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
-        f.setSize(800, 600);  
-        f.add(new Lab1());  
-        f.setVisible(true);  
-        f.setLocationRelativeTo(f.getOwner());  
-	}
+//	public static void createFlowChartFrame() {
+//		final JFrame f = new JFrame("流程图");  
+//        // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
+//        f.setSize(800, 600);  
+//        f.add(new Lab1());  
+//        f.setVisible(true);  
+//        f.setLocationRelativeTo(f.getOwner());  
+//	}
 	
 	/** 切割字符串
 	 * @param str 读入的字符串
