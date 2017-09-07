@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Lab1 extends JComponent {
 	private static final long serialVersionUID = -4654513992552014113L;
@@ -370,12 +371,19 @@ class panel extends JPanel {
 		JButton btnOpen = new JButton("Open");
 		btnOpen.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				FileDialog fd = new FileDialog(Lab1.f, "Choose file", FileDialog.LOAD);
-				fd.setFile("*.txt");
-				fd.setVisible(true);
-				String filename = fd.getFile();
+				JFileChooser fc = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Text file", "txt");
+				fc.setFileFilter(filter);
+				fc.setDialogTitle("Choose file");
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fc.showOpenDialog(Lab1.f);
+				
+				// FileDialog fd = new FileDialog(Lab1.f, "Choose file", FileDialog.LOAD);
+				// fd.setFile("*.txt");
+				// fd.setVisible(true);
+				File filename = fc.getSelectedFile();
 				if (filename != null){
-					Lab1.fileUrl = fd.getDirectory() + fd.getFile();
+					Lab1.fileUrl = fc.getSelectedFile().getAbsolutePath();
 					Lab1.readInFile();
 				}
 			}
