@@ -59,3 +59,9 @@
 如果没有遇到困难，GraphvizVersion分支预期在本周末完成项目需求90%
 
 Note Created by Yumi
+
+### 2017/09/09
+
+考虑到JGraphT库实现有向图可视化过于困难而删除掉JGraphTVersion branch
+
+Note Created by Yumi
