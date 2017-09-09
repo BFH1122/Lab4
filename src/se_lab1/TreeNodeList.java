@@ -5,16 +5,12 @@ package se_lab1;
 
 import java.util.ArrayList;
 
-/**
- * @author bubbl
- *
- */
 /** 继承原生ArrayList类添加自定义元素查找方法
  * @author Yumi
  * 
  * @param <E> 内部添加的方法只对TreeNode对象集有效 
  */
-class NodeList<E> extends ArrayList<E> {
+class TreeNodeList<E> extends ArrayList<E> implements Cloneable{
 
 	private static final long serialVersionUID = 682330081079347841L;
 	int longestWordLength = 0;
@@ -77,5 +73,16 @@ class NodeList<E> extends ArrayList<E> {
 			popNode = null;
 		}
 		return popNode;
+	}
+	
+	public ArrayList<Integer> multiIndexOf(E e) {
+		ArrayList<Integer> multiIndex = new ArrayList<Integer>();
+		TreeNode queryNode = (TreeNode) e;
+		for(int i = 0;i<this.size();i++) {
+			if(this.get(i).equals(queryNode)) {
+				multiIndex.add(new Integer(i));
+			}
+		}
+		return multiIndex;
 	}
 }

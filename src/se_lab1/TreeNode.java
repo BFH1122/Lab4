@@ -9,15 +9,17 @@ import java.util.ArrayList;
 class TreeNode {
 	String word;
 	int level;
-	NodeList<TreeNode> parentList;
-	NodeList<TreeNode> childList;
+	TreeNodeList<TreeNode> parentList;
+	TreeNodeList<TreeNode> childList;
 	ArrayList<Integer> childPathWeightList;
 	
 	public TreeNode(String word, TreeNode parent) {
 		this.word = word;
-		this.parentList = new NodeList<TreeNode>();
-		this.parentList.add(parent);
-		this.childList = new NodeList<TreeNode>();
+		this.parentList = new TreeNodeList<TreeNode>();
+		if(parent != null) {
+			this.parentList.add(parent);
+		}
+		this.childList = new TreeNodeList<TreeNode>();
 		this.childPathWeightList = new ArrayList<Integer>();
 	}
 	
@@ -26,7 +28,9 @@ class TreeNode {
 	}
 	
 	public void addParent(TreeNode anotherParent) {
-		this.parentList.add(anotherParent);
+		if(this.parentList.nodeCheck(anotherParent.getWord()) == null) {
+			this.parentList.add(anotherParent);
+		}
 	}
 	
 	/** 对当前节点进行添加子节点操作，附带对子节点查重操作

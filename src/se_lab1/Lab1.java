@@ -4,8 +4,6 @@
 package se_lab1;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -32,7 +30,30 @@ public class Lab1 extends JComponent {
 			}
 			words = wordSplit(wordsStr);
 			t = new Tree(words);
-			t.calculateNodeLevel();
+			// Test queryBridgeWords
+			/*
+			for(int i = 0;i<t.TreeNodes.size();i++) {
+				for(int j = 0;j<t.TreeNodes.size();j++) {
+					System.out.println(t.queryBridgeWords(t.TreeNodes.get(i).getWord(), t.TreeNodes.get(j).getWord())+"\n");
+				}
+			}
+			*/
+			
+			// Test generateNewText
+			//System.out.println(t.generateNewText("Seek to explore new and exciting synergies"));
+			
+			// Test calcShortestPath
+			/*
+			try {
+				System.out.println(t.calcShortestPath("new", "strange"));
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			
+			// Test randomWalk
+			// System.out.println(t.randomWalk());
 			createFlowChartFrame();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -41,11 +62,6 @@ public class Lab1 extends JComponent {
 	
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-		// GradientPaint grdp = new GradientPaint(150, 150, Color.decode("#81FBB8"), 300, 300, Color.decode("#28C76F"));
-		// g2d.setPaint(grdp);
-		// g2d.fillRoundRect(150, 150, 150, 150, 15, 15);
-		g2d.drawString(t.head.word, 10, 10);
 	}
 	
 	public Lab1() {
