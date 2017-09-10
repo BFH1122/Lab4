@@ -53,7 +53,7 @@ class MyFrame extends JFrame{
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
-		pack();
+		
 		
 		Container c = getContentPane();
 		
