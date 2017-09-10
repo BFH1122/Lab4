@@ -16,13 +16,13 @@
 
 根据生成的节点以及邻接关系生成有向图（GUI部分），选做：将生成图像保存本地
 
-## 需求3：QueryBridgeWords 
+## 需求3：QueryBridgeWords √
 
 > String queryBridgeWords(type G, String word1, String word2)
 
 查询桥接词，s1：存在桥接；s2：不存在桥接；s3：不在图中；s4：多个桥接词
 
-## 需求4：CreatedByGraph 
+## 需求4：CreatedByGraph √
 
 > String generateNewText(type G, String inputText)
 
