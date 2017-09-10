@@ -17,6 +17,7 @@ public class Lab1 extends JComponent {
 	public static String fileUrl;
 	public static String[] words;
 	public static Tree t;
+	public static int imgState = 0;
 	
 	public static void readInFile(){
 		File file = new File(fileUrl);
@@ -26,10 +27,11 @@ public class Lab1 extends JComponent {
 			in = new Scanner(file);
 			while(in.hasNextLine()){
 				String str = in.nextLine();
-				wordsStr = wordsStr.concat(replaceStr(str));
+				wordsStr = wordsStr.concat(replaceStr(str)+" ");
 			}
 			words = wordSplit(wordsStr);
 			t = new Tree(words);
+			DirectedGraph.createDirectedGraph(t, fileUrl, "Verdana", 12);
 			// Test queryBridgeWords
 			/*
 			for(int i = 0;i<t.TreeNodes.size();i++) {
@@ -54,27 +56,13 @@ public class Lab1 extends JComponent {
 			
 			// Test randomWalk
 			// System.out.println(t.randomWalk());
-			createFlowChartFrame();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	protected void paintComponent(Graphics g) {
-		Graphics2D g2d = (Graphics2D)g;
-	}
-	
 	public Lab1() {
 		setBackground(Color.WHITE);
-	}
-	
-	public static void createFlowChartFrame() {
-		final JFrame f = new JFrame("流程图");  
-        // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
-        f.setSize(800, 600);  
-        f.add(new Lab1());  
-        f.setVisible(true);  
-        f.setLocationRelativeTo(f.getOwner());  
 	}
 	
 	/** 切割字符串
