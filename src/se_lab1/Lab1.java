@@ -56,6 +56,7 @@ public class Lab1 extends JComponent {
 			
 			// Test randomWalk
 			// System.out.println(t.randomWalk());
+			in.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

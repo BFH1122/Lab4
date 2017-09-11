@@ -10,7 +10,9 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -61,9 +63,25 @@ class MyFrame extends JFrame{
 		JMenuBar mb = new JMenuBar();JMenu mFile = new JMenu("文件(F)");
 		// File菜单
 		mFile.setMnemonic('F');
-		JMenuItem miOpen = new JMenuItem("打开");
+		JMenuItem miOpen = new JMenuItem("打开(O)");
 		miOpen.setMnemonic('O');
+		JMenuItem miReset = new JMenuItem("回复默认图(R)");
+		miReset.setMnemonic('O');
 		mFile.add(miOpen);
+		mFile.add(miReset);
+		miReset.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Lab1.readInFile();
+				}catch (NullPointerException e) {
+					// e.printStackTrace();
+				}
+				
+			}
+			
+		});
 		miOpen.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser();
@@ -84,7 +102,7 @@ class MyFrame extends JFrame{
 		// 将菜单栏添加到主程序
 		setJMenuBar(mb);
 		
-		JPanel mainPanel = new JPanel(new GridLayout(1,2));
+		JPanel mainPanel = new JPanel(new GridLayout());
 		picDisplayPanel picPanel = new picDisplayPanel();
 		JScrollPane sp = new JScrollPane(picPanel);
 		sp.validate();
@@ -101,7 +119,7 @@ class MyFrame extends JFrame{
 class functionPanel extends JPanel {
 	private static final long serialVersionUID = -1104559035947942491L;
 	private JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP);
-	private String[] tabNames = {"查找桥接词", "生成新文本", "查找最短路", "选项卡4", "选项卡5"};
+	private String[] tabNames = {"查找桥接词", "生成新文本", "查找最短路", "随机游走"};
 	public functionPanel() {
 		setBackground(Color.WHITE);
 		JPanel tab1 = new queryBridgePanel();
@@ -110,6 +128,8 @@ class functionPanel extends JPanel {
 		tp.addTab(tabNames[1], null, tab2);
 		JPanel tab3 = new shortestPanel();
 		tp.addTab(tabNames[2], null, tab3);
+		JPanel tab4 = new randomPanel();
+		tp.addTab(tabNames[3], null, tab4);
 		add(tp);
 	}
 }
@@ -118,7 +138,7 @@ class shortestPanel extends JPanel {
 	private static final long serialVersionUID = 7264749733574435443L;
 	JTextField tfWord1 = new JTextField(112);
 	JLabel lbWord1 = new JLabel("单词1: ");
-	JTextField tfWord2 = new JTextField(112);
+	JTextField tfWord2 = new JTextField(12);
 	JLabel lbWord2 = new JLabel("单词2: ");
 	JLabel lbRst = new JLabel();
 	JButton btnQB = new JButton("开始计算");
@@ -131,9 +151,12 @@ class shortestPanel extends JPanel {
 				try {
 					String shortest = Lab1.t.calcShortestPath(tfWord1.getText(), tfWord2.getText());
 					lbRst.setText(shortest);
+					DirectedGraph.createShortestDirectedGraph(Lab1.t, Lab1.fileUrl, "Verdana", 12, shortest);
 				} catch (CloneNotSupportedException e1) {
 					// TODO 自动生成的 catch 块
 					e1.printStackTrace();
+				} catch (NullPointerException e2) {
+					
 				}
 			}
 			
@@ -201,9 +224,38 @@ class queryBridgePanel extends JPanel {
 	}
 }
 
+class randomPanel extends JPanel {
+	private static final long serialVersionUID = -2862015187279261925L;
+	JLabel lbRst = new JLabel();
+	JButton btnG = new JButton("开始生成");
+	public randomPanel() {
+		btnG.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String random = Lab1.t.randomWalk();
+				lbRst.setText(random);
+				DirectedGraph.createRandomDirectedGraph(Lab1.t, Lab1.fileUrl, "Verdana", 12, random);
+			}
+			
+		});
+		GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+		setLayout(new GridBagLayout());
+		gbc.gridy = 1;
+		add(btnG, gbc);
+		gbc.gridy = 2;
+		add(lbRst, gbc);
+	}
+}
+
 class newTextPanel extends JPanel {
 	private static final long serialVersionUID = -2862015187279261925L;
-	JTextArea taText = new JTextArea(4,50);
+	JTextArea taText = new JTextArea(3,40);
 	JLabel lbText = new JLabel("新文本: ");
 	JLabel lbRst = new JLabel();
 	JButton btnG = new JButton("开始生成");
@@ -223,7 +275,6 @@ class newTextPanel extends JPanel {
 			
 		});
 		GridBagConstraints gbc = new GridBagConstraints();
-		
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
@@ -255,10 +306,16 @@ class picDisplayPanel extends JPanel {
 	}
 	
 	public static void setPic(String path) {
-		pic = new ImageIcon(path);
-		WIDTH = pic.getIconWidth();
-		HEIGHT = pic.getIconHeight();
-		picLabel.setIcon(pic);
+		try {
+			pic = new ImageIcon(ImageIO.read(new File(path)));
+			WIDTH = pic.getIconWidth();
+			HEIGHT = pic.getIconHeight();
+			picLabel.setIcon(pic);
+			picLabel.repaint();
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
 	}
 	
 	public static void changeSize(int percent) {
