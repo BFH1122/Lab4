@@ -28,13 +28,13 @@
 
 通过桥接图对新输入的文本进行插入桥接词
 
-## 需求5：ShortPathOfWords 
+## 需求5：ShortPathOfWords √
 
 > String calcShortestPath(type G, String word1, String word2)
 
 输出两个词之间最短路径，并凸出标记图输出，选做：单源最短路径输出
 
-## 需求6：String randomWalk(type G) 
+## 需求6：String randomWalk(type G) √
 
 > String randomWalk(type G)
 
@@ -69,3 +69,14 @@ master分支完成所有需求的后端数据部分，包括桥接词、路径�
 工作方向转向前端设计部分
 Note Created by Yumi
 
+### 2017/09/09
+
+所有需求大概完成，确定以Graphviz为master分支方向，当前仍需解决的问题有：
+
+1. 窗口布局优化
+2. 生成图放大缩小(按钮)功能
+3. 多条最短路径显示的适配
+4. 在随机游走中优化显示效率以及修复不能停止游走的缺陷
+5. 完成部分可选的功能
+
+Note Created by Yumi
