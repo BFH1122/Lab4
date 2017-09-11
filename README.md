@@ -67,6 +67,7 @@ Note Created by Yumi
 master分支完成所有需求的后端数据部分，包括桥接词、路径和随机游走数据。
 
 工作方向转向前端设计部分
+
 Note Created by Yumi
 
 ### 2017/09/09
