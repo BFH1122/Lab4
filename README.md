@@ -88,5 +88,5 @@ Note Created by Yumi
 
 Note Created by Yumi
 
-![设计原型]
+![设计实现结果]
 (https://raw.githubusercontent.com/zhouchang29/se_lab1/master/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%AD%E4%BB%A3.png)
