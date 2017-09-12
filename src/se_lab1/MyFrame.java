@@ -140,8 +140,10 @@ class shortestPanel extends JPanel {
 	JLabel lbWord1 = new JLabel("单词1: ");
 	JTextField tfWord2 = new JTextField(12);
 	JLabel lbWord2 = new JLabel("单词2: ");
-	JLabel lbRst = new JLabel();
+	//JLabel lbRst = new JLabel();
+	JTextArea txRst = new JTextArea(3,30);
 	JButton btnQB = new JButton("开始计算");
+	PathGraphAssist pga;
 	public shortestPanel() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		btnQB.addActionListener(new ActionListener() {
@@ -149,9 +151,10 @@ class shortestPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String shortest = Lab1.t.calcShortestPath(tfWord1.getText(), tfWord2.getText());
-					lbRst.setText(shortest);
-					DirectedGraph.createShortestDirectedGraph(Lab1.t, Lab1.fileUrl, "Verdana", 12, shortest);
+					pga = new PathGraphAssist(Lab1.t.TreeNodes);
+					String shortest = Lab1.t.calcShortestPath(tfWord1.getText(), tfWord2.getText(),pga);
+					txRst.setText(shortest);
+					DirectedGraph.createShortestDirectedGraph(Lab1.t, Lab1.fileUrl, "Verdana", 12, shortest, pga);
 				} catch (CloneNotSupportedException e1) {
 					// TODO 自动生成的 catch 块
 					e1.printStackTrace();
@@ -177,7 +180,7 @@ class shortestPanel extends JPanel {
 		gbc.gridy = 4;
 		add(btnQB, gbc);
 		gbc.gridy = 5;
-		add(lbRst, gbc);
+		add(txRst, gbc);
 	}
 }
 

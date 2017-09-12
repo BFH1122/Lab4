@@ -32,30 +32,6 @@ public class Lab1 extends JComponent {
 			words = wordSplit(wordsStr);
 			t = new Tree(words);
 			DirectedGraph.createDirectedGraph(t, fileUrl, "Verdana", 12);
-			// Test queryBridgeWords
-			/*
-			for(int i = 0;i<t.TreeNodes.size();i++) {
-				for(int j = 0;j<t.TreeNodes.size();j++) {
-					System.out.println(t.queryBridgeWords(t.TreeNodes.get(i).getWord(), t.TreeNodes.get(j).getWord())+"\n");
-				}
-			}
-			*/
-			
-			// Test generateNewText
-			//System.out.println(t.generateNewText("Seek to explore new and exciting synergies"));
-			
-			// Test calcShortestPath
-			/*
-			try {
-				System.out.println(t.calcShortestPath("new", "strange"));
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
-			
-			// Test randomWalk
-			// System.out.println(t.randomWalk());
 			in.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
