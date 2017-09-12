@@ -14,7 +14,8 @@ public class DirectedGraph {
 	 * @param fontsize 字体大小
 	 * @return 成功标识(true)
 	 */
-	public static boolean createShortestDirectedGraph(Tree t, String fileUrl, String fontname, int fontsize, String shortest) {
+	public static boolean createShortestDirectedGraph(Tree t, String fileUrl, 
+					String fontname, int fontsize, String shortest, PathGraphAssist pga) {
 		String[] shroads = shortest.split("\n");
 		for (int i = 0; i < shroads.length; i++) {
 			shroads[i] = shroads[i].replaceAll("Path [0-9]+ :", "");
@@ -29,7 +30,17 @@ public class DirectedGraph {
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(sdotFile));
 			while(in.hasNextLine()) {
 				String str = in.nextLine();
-				str = replaceResult(str, shroads[0], colors[0]);
+				for (int i = 0; i < pga.AllNodes.size(); i++) {
+					for(int j = 0;j < pga.AllNodes.size(); j++) {
+						TreeNode node1 = pga.AllNodes.get(i),
+								node2 = pga.AllNodes.get(j);
+						str = str.replace(String.format("%s -> %s [color = \"#3498db\"]", node1.getWord(), node2.getWord()), 
+								String.format("%s -> %s [color = \"%s\"]", node1.getWord(), node2.getWord(), "#778899"));
+					}
+				}
+				for (int i = 0; i < shroads.length; i++) {
+					str = replaceResult(str, shroads[i], colors[i], pga);
+				}
 				outBuffer.write(str);
 			}
 			outBuffer.flush();
@@ -113,10 +124,16 @@ public class DirectedGraph {
 		return in+"\n";
 	}
 	
-	public static String replaceResult(String in, String shortroad, String color) {
+	public static String replaceResult(String in, String shortroad, String color, PathGraphAssist pga) {
 		String[] srNodes;
 		srNodes = shortroad.split("->");
 		for (int i = 0; i < srNodes.length - 1; i++) {
+			TreeNode node1 = pga.AllNodes.nodeCheck(srNodes[i]),
+					node2 = pga.AllNodes.nodeCheck(srNodes[i+1]);
+			int state = pga.QueryNodeToNode(node1, node2);
+			if(state == Integer.MAX_VALUE) {
+				color = "#B71C1C";
+			}
 			in = in.replace(String.format("%s -> %s", srNodes[i], srNodes[i+1]), String.format("%s -> %s [color = \"%s\"]", srNodes[i], srNodes[i+1], color));
 		}
 		return in+"\n";
@@ -130,8 +147,6 @@ public class DirectedGraph {
 	 * @return 成功标识(true)
 	 */
 	public static boolean createDirectedGraph(Tree t, String fileUrl, String fontname, int fontsize) {
-		TreeNodeList<TreeNode> queue = new TreeNodeList<TreeNode>();
-		TreeNode nowNode = t.head;
 		File dotFile = new File(fileUrl.replace("txt", "dot"));
 		try {
 			dotFile.createNewFile();
@@ -142,16 +157,12 @@ public class DirectedGraph {
 			for(int i = 0; i < Lab1.words.length; i++) {
 				outBuffer.write(String.format("\t%s;\n", Lab1.words[i]));
 			}
-			queue.push(nowNode);			
-			while(queue.isEmpty() != true) {
-				nowNode = queue.pop();
-				if (nowNode != null) {
-					for(int i = 0; i < nowNode.childList.size(); i++) {
-						TreeNode nowChildNode = nowNode.childList.get(i);
-						outBuffer.write(String.format("\t%s -> %s [label=\"%d\"];\n", nowNode.word, nowChildNode.word, nowNode.getWeightOfNode(nowChildNode)));
-						if (nowNode.level < nowChildNode.level && queue.indexOf(nowChildNode) == -1) {
-							queue.push(nowChildNode);
-						}
+			for(int i=0;i<t.TreeNodes.size();i++) {
+				for(int j=0;j<t.TreeNodes.size();j++) {
+					TreeNode node1 = t.TreeNodes.get(i),
+					node2 = t.TreeNodes.get(j);
+					if(node1.childList.indexOf(node2) != -1) {
+						outBuffer.write(String.format("\t%s -> %s [label=\"%d\"];\n", node1.getWord(), node2.getWord(), node1.getWeightOfNode(node2)));
 					}
 				}
 			}

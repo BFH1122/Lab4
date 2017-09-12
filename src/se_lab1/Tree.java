@@ -143,7 +143,7 @@ class Tree {
 		return retNodes;
 	}
 	
-	public String calcShortestPath(String word1, String word2) throws CloneNotSupportedException {
+	public String calcShortestPath(String word1, String word2,PathGraphAssist pga) throws CloneNotSupportedException {
 		String res = "";
 		TreeNode startNode = this.TreeNodes.nodeCheck(word1),
 				endNode = this.TreeNodes.nodeCheck(word2);
@@ -212,6 +212,7 @@ class Tree {
 			// 不存在的
 			res += "There's no path from "+word1+" to "+word2+".";
 		}
+		pga.AllPaths = certainPaths;
 		return res;
 	}
 
