@@ -87,3 +87,6 @@ Note Created by Yumi
 所有基本需求已经完成，合并到master分支，完成软件迭代周期。
 
 Note Created by Yumi
+
+![设计原型]
+(https://raw.githubusercontent.com/zhouchang29/se_lab1/master/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%AD%E4%BB%A3.png)
