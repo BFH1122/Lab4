@@ -81,3 +81,9 @@ Note Created by Yumi
 5. 完成部分可选的功能
 
 Note Created by Yumi
+
+### 2017/09/12
+
+所有基本需求已经完成，合并到master分支，完成软件迭代周期。
+
+Note Created by Yumi
